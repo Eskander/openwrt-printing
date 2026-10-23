@@ -36,10 +36,13 @@ define Package/ghostscript/description
 endef
 
 # $(RM) -r freetype
+
+CONFIGURE_VARS += \
+	CUPSCONFIG="$(STAGING_DIR)/host/bin/cups-config"
+
 define Build/Configure
 	(cd $(PKG_BUILD_DIR) && $(RM) -r expat jasper lcms2 lcms libpng tiff zlib)
 	$(call Build/Configure/Default, \
-	CUPSCONFIG="$(STAGING_DIR)/host/bin/cups-config" \
 	CPPFLAGS="-I$(STAGING_DIR)/usr/include/freetype2 " \
 	LDFLAGS="-L$(STAGING_DIR)/usr/lib " \
 	--disable-gtk \
@@ -56,6 +59,14 @@ endef
 define Build/Compile
 	$(SED) 's,OPENWRT_BASE_BUILD_PATH,$(HOST_BUILD_DIR),g' $(PKG_BUILD_DIR)/base/unix-aux.mak
 	$(SED) 's,OPENWRT_PGK_BUILD_PATH,$(PKG_BUILD_DIR),g' $(PKG_BUILD_DIR)/base/unix-aux.mak
+
+	$(SED) \
+		's|^DEVICE_DEVS1=.*|DEVICE_DEVS1=|' \
+		-e 's|^DEVICE_DEVS2=.*|DEVICE_DEVS2=|' \
+		-e 's|^DEVICE_DEVS4=.*|DEVICE_DEVS4=|' \
+		-e 's|^DEVICE_DEVS6=.*|DEVICE_DEVS6=|' \
+		-e 's|^DEVICE_DEVS16=.*|DEVICE_DEVS16=|' \
+		$(PKG_BUILD_DIR)/Makefile
 
 	$(call Build/Compile/Default, cross_prepare)
 	$(call Build/Compile/Default)

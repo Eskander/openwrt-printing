@@ -42,7 +42,6 @@ endef
 define Package/cups/conffiles
 /etc/cups/classes.conf
 /etc/cups/cupsd.conf
-/etc/cups/cups-files.conf
 /etc/cups/printers.conf
 endef
 

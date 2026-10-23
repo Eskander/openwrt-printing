@@ -24,6 +24,7 @@ CONFIGURE_ARGS += \
 	--disable-mutool \
 	--disable-foomatic \
 	--enable-poppler \
+	--disable-ghostscript \
 	--disable-driverless \
 	--enable-individual-cups-filters
 
@@ -33,7 +34,7 @@ define Package/cups-filters
   SUBMENU:=Printing
   TITLE:=OpenPrinting CUPS filters
   URL:=https://github.com/OpenPrinting/cups-filters
-  DEPENDS:=+cups +libcupsfilters +libppd +qpdf +ghostscript
+  DEPENDS:=+cups +libcupsfilters +libppd +qpdf
 endef
 
 define Package/cups-filters/description
@@ -43,12 +44,12 @@ endef
 define Package/cups-filters/install
 	$(INSTALL_DIR) $(1)/usr/lib/cups/filter
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/lib/cups/filter/pdftopdf $(1)/usr/lib/cups/filter/
-	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/lib/cups/filter/gstoraster $(1)/usr/lib/cups/filter/
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/lib/cups/filter/pdftoraster $(1)/usr/lib/cups/filter/
 
 	$(INSTALL_DIR) $(1)/usr/share/cups/mime
 	$(INSTALL_DATA) $(PKG_INSTALL_DIR)/usr/share/cups/mime/cupsfilters.types $(1)/usr/share/cups/mime/
 	$(INSTALL_DATA) $(PKG_INSTALL_DIR)/usr/share/cups/mime/cupsfilters-individual.convs $(1)/usr/share/cups/mime/
-	$(INSTALL_DATA) $(PKG_INSTALL_DIR)/usr/share/cups/mime/cupsfilters-ghostscript.convs $(1)/usr/share/cups/mime/
+	$(INSTALL_DATA) $(PKG_INSTALL_DIR)/usr/share/cups/mime/cupsfilters-poppler.convs $(1)/usr/share/cups/mime/
 endef
 
 $(eval $(call BuildPackage,cups-filters))

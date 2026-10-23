@@ -57,7 +57,7 @@ define Build/Compile
 	$(SED) 's,OPENWRT_PGK_BUILD_PATH,$(PKG_BUILD_DIR),g' $(PKG_BUILD_DIR)/base/unix-aux.mak
 
 	$(SED) \
-		-e 's|^DEVICE_DEVS1=.*|DEVICE_DEVS1=$$(DD)cups.dev|' \
+		's|^DEVICE_DEVS1=.*|DEVICE_DEVS1=$$(DD)cups.dev|' \
 		-e 's|^DEVICE_DEVS2=.*|DEVICE_DEVS2=|' \
 		-e 's|^DEVICE_DEVS3=.*|DEVICE_DEVS3=|' \
 		-e 's|^DEVICE_DEVS4=.*|DEVICE_DEVS4=|' \

@@ -63,7 +63,6 @@ define Build/Compile
 	$(SED) \
 		's|^DEVICE_DEVS1=.*|DEVICE_DEVS1=|' \
 		-e 's|^DEVICE_DEVS2=.*|DEVICE_DEVS2=|' \
-		-e 's|^DEVICE_DEVS3=.*|DEVICE_DEVS3=$(DD)cups.dev|' \
 		-e 's|^DEVICE_DEVS4=.*|DEVICE_DEVS4=|' \
 		-e 's|^DEVICE_DEVS6=.*|DEVICE_DEVS6=|' \
 		-e 's|^DEVICE_DEVS16=.*|DEVICE_DEVS16=|' \

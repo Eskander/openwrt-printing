@@ -1,7 +1,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libcupsfilters
-PKG_VERSION:=2.1.1
+PKG_VERSION:=2.1.2
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
@@ -13,14 +13,24 @@ PKG_LICENSE_FILES:=COPYING
 
 PKG_INSTALL:=1
 
+PKG_BUILD_DEPENDS:=qpdf
+
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/autotools.mk
 
-CONFIGURE_ARGS += 
-	--disable-static 
-	--disable-poppler 
-	--disable-dbus 
-	--without-fontconfig
+CONFIGURE_ARGS += \
+	--disable-static \
+	--disable-poppler \
+	--disable-dbus \
+	--disable-exif \
+	--disable-mutool \
+	--disable-texttopdf \
+	--disable-imagefilters \
+	--without-fontconfig \
+	--without-jpeg \
+	--without-png \
+	--without-tiff \
+	--without-jpegxl
 
 define Package/libcupsfilters
   SECTION:=libs

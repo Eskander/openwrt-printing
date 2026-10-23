@@ -44,7 +44,6 @@ CONFIGURE_ARGS+= \
 	--enable-zlib \
 	--enable-libjpeg \
 	--enable-cms=lcms2 \
-	--disable-poppler-cpp \
 	--with-font-configuration=fontconfig
 
 define Package/poppler/install

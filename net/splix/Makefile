@@ -16,9 +16,8 @@ define Package/splix
 	SECTION:=net
 	CATEGORY:=Network
 	TITLE:=SPL printer driver for Unix
-	#DESCRIPTION:=This variable is obsolete. use the Package/name/description define instead!
-	DEPENDS:=+cups +libcupsimage +libtiff +libjbigkit
-	URL:=http://pkgs.fedoraproject.org/cgit/splix.git/
+	DEPENDS:=+libcups +libcupsimage +libtiff +libpng +libjbigkit
+	URL:=https://openprinting.github.io/splix/
 endef
 
 define Package/splix/description
@@ -26,11 +25,20 @@ define Package/splix/description
 endef
 
 define Build/Configure
-	$(SED) 's/(const PPDFile::Value::Value/(const PPDFile::Value/' $(PKG_BUILD_DIR)/src/ppdfile.cpp
-	$(SED) "s/^CC\t\t:= gcc/CC\t\t:= $(TARGET_CC)/" -e "s/^CXX\t\t:= g++/CXX\t\t:= $(TARGET_CXX)/" -e "s/^AR\t\t:= ar/AR\t\t:= $(TARGET_AR)/" $(PKG_BUILD_DIR)/Makefile
-	$(SED) 's|\(.*\)toqpdl_LDFLAGS\t*:=.*|\1toqpdl_LDFLAGS\t:=$(TARGET_LDFLAGS) -lpthread|' -e 's|\(.*\)toqpdl_LIBS\t*:=.*|\1toqpdl_LIBS\t:=-lpng -ltiff -lcups -lcupsimage|' -e 's|^CXXFLAGS\t\t+= `cups.*|CXXFLAGS\t\t+= $(TARGET_CFLAGS) -Iinclude -Wall $(TARGET_CPPFLAGS)|' -e 's|CUPSFILTER\t*:=.*|CUPSFILTER\t:= /usr/lib/cups/filter|' -e 's|CUPSPPD\t*:=.*|CUPSPPD\t:= /usr/share/cups/model|' $(PKG_BUILD_DIR)/module.mk
-	$(SED) 's|g++|$(TARGET_CXX)|' $(PKG_BUILD_DIR)/rules.mk
-	mv $(PKG_BUILD_DIR)/*.ppd $(PKG_BUILD_DIR)/ppd/
+	$(SED) 's/^CC[[:space:]]*:=.*/CC := $(TARGET_CC)/' $(PKG_BUILD_DIR)/Makefile
+	$(SED) 's/^CXX[[:space:]]*:=.*/CXX := $(TARGET_CXX)/' $(PKG_BUILD_DIR)/Makefile
+	$(SED) 's/^AR[[:space:]]*:=.*/AR := $(TARGET_AR)/' $(PKG_BUILD_DIR)/Makefile
+
+	$(SED) 's|^CXXFLAGS[[:space:]]*+=.*pkg-config.*|CXXFLAGS += -Iinclude $(TARGET_CPPFLAGS) $(TARGET_CXXFLAGS)|' $(PKG_BUILD_DIR)/module.mk
+	$(SED) 's|^rastertoqpdl_LDFLAGS[[:space:]]*:=.*|rastertoqpdl_LDFLAGS := $(TARGET_LDFLAGS)|' $(PKG_BUILD_DIR)/module.mk
+	$(SED) 's|^rastertoqpdl_LIBS[[:space:]]*:=.*|rastertoqpdl_LIBS := -lpng -ltiff -lcups -lcupsimage -ljbig85 -lpthread|' $(PKG_BUILD_DIR)/module.mk
+
+	$(SED) 's|^CUPSFILTER[[:space:]]*:=.*|CUPSFILTER := /usr/lib/cups/filter|' $(PKG_BUILD_DIR)/module.mk
+endef
+
+define Package/splix/install
+	$(INSTALL_DIR) $(1)/usr/lib/cups/filter
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/rastertoqpdl $(1)/usr/lib/cups/filter/
 endef
 
 $(eval $(call BuildPackage,splix))

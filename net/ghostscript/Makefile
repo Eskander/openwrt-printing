@@ -27,7 +27,7 @@ define Package/ghostscript
   SECTION:=net
   CATEGORY:=Network
   TITLE:=ghostscript
-  DEPENDS:=+libcups +libcupsimage +libfreetype +fontconfig +libtiff +libjpeg +libpng +libexpat +lcms2 +zlib +ghostscript-fonts-std
+  DEPENDS:=+libcups +libcupsimage +libfreetype +fontconfig +libtiff +libjpeg +libpng +libexpat +lcms2 +zlib +ghostscript-fonts-std +libstdcpp
   SUBMENU:=Printing
 endef
 

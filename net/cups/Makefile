@@ -107,7 +107,7 @@ define Build/Configure
 		--with-error-policy=stop-printer \
 		--enable-shared \
 		--enable-libusb \
-		--enable-acl \
+		--disable-acl \
 		--enable-webif \
 		--disable-dbus \
 		--disable-browsing \

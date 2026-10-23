@@ -64,8 +64,8 @@ define Build/InstallDev
 	$(INSTALL_DIR) $(1)/usr/lib/pkgconfig
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/pkgconfig/libqpdf.pc $(1)/usr/lib/pkgconfig/
 
-	$(SED) 's|^libdir=/usr/lib$$|libdir=$${prefix}/lib|' $(1)/usr/lib/pkgconfig/libqpdf.pc
-	$(SED) 's|^includedir=/usr/include$$|includedir=$${prefix}/include|' $(1)/usr/lib/pkgconfig/libqpdf.pc
+	$(SED) 's|^libdir=/usr/lib|libdir=$${prefix}/lib|' $(1)/usr/lib/pkgconfig/libqpdf.pc
+	$(SED) 's|^includedir=/usr/include|includedir=$${prefix}/include|' $(1)/usr/lib/pkgconfig/libqpdf.pc
 endef
 
 $(eval $(call BuildPackage,qpdf))

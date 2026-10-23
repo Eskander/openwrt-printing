@@ -8,50 +8,61 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=qpdf
-PKG_VERSION:=4.0.1
+PKG_VERSION:=11.10.1
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=@SF/$(PKG_NAME)
-PKG_MD5SUM:=093baece867a0a7e07774bd4008156b3
+PKG_SOURCE_URL:=https://github.com/qpdf/qpdf/releases/download/v$(PKG_VERSION)
+PKG_HASH:=skip
 
+PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
 PKG_INSTALL:=1
 
+CMAKE_BINARY_SUBDIR:=build
+CMAKE_SOURCE_SUBDIR:=
+
 include $(INCLUDE_DIR)/package.mk
+include $(INCLUDE_DIR)/cmake.mk
+
+CMAKE_OPTIONS += \
+	-DBUILD_SHARED_LIBS=ON \
+	-DBUILD_STATIC_LIBS=OFF \
+	-DBUILD_DOC=OFF \
+	-DINSTALL_EXAMPLES=OFF \
+	-DINSTALL_CMAKE_PACKAGE=ON \
+	-DINSTALL_PKGCONFIG=ON \
+	-DREQUIRE_CRYPTO_NATIVE=ON \
+	-DUSE_IMPLICIT_CRYPTO=OFF
 
 define Package/qpdf
   SECTION:=utils
   CATEGORY:=Utilities
-  TITLE:=QPDF is a command-line program for transformations on PDF files.
-  DEPENDS:= +libpcre +zlib +libstdcpp
-  URL:=http://qpdf.sourceforge.net/
+  TITLE:=QPDF PDF transformation library and tools
+  DEPENDS:=+libstdcpp +zlib +libjpeg +libatomic
+  URL:=https://github.com/qpdf/qpdf
   SUBMENU:=Printing
 endef
 
 define Package/qpdf/description
-QPDF is a command-line program that does structural, content-preserving
-transformations on PDF files. It could have been called something like pdf-to-pdf.
-It also provides  many useful capabilities to developers of PDF-producing software
-or for people who just want to look at the innards of a PDF file to learn more
-about how they work.
+ QPDF library and command-line tools for PDF transformations.
 endef
 
 define Package/qpdf/install
 	$(INSTALL_DIR) $(1)/usr/bin $(1)/usr/lib
 	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/* $(1)/usr/bin/
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/* $(1)/usr/lib/
-endef
-
-define Build/Compile
-	$(call Build/Compile/Default, LIBTOOL="./libtool --tag=CXX")
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libqpdf.so* $(1)/usr/lib/
 endef
 
 define Build/InstallDev
-	$(INSTALL_DIR) $(1)/usr/bin $(1)/usr/lib
-	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/* $(1)/usr/bin/
-	$(INSTALL_DIR) $(1)/usr/include
-	$(CP) -r $(PKG_INSTALL_DIR)/usr/include/$(PKG_NAME) $(1)/usr/include/
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/* $(1)/usr/lib
+	$(INSTALL_DIR) $(1)/usr/include $(1)/usr/lib
+	$(CP) $(PKG_INSTALL_DIR)/usr/include/qpdf $(1)/usr/include/
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libqpdf.so* $(1)/usr/lib/
+
+	$(INSTALL_DIR) $(1)/usr/lib/cmake
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/cmake/qpdf $(1)/usr/lib/cmake/
+
+	$(INSTALL_DIR) $(1)/usr/lib/pkgconfig
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/pkgconfig/libqpdf.pc $(1)/usr/lib/pkgconfig/
 endef
 
 $(eval $(call BuildPackage,qpdf))

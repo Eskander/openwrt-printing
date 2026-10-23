@@ -39,9 +39,10 @@ endef
 define Build/Configure
 	(cd $(PKG_BUILD_DIR) && $(RM) -r expat jasper lcms2 lcms libpng tiff zlib)
 	$(call Build/Configure/Default, \
+	CUPSCONFIG="$(STAGING_DIR)/host/bin/cups-config" \
 	CPPFLAGS="-I$(STAGING_DIR)/usr/include/freetype2 " \
 	LDFLAGS="-L$(STAGING_DIR)/usr/lib " \
-	--disable-gtk	\
+	--disable-gtk \
 	--without-libidn \
 	--without-x \
 	--with-jbig2dec \
@@ -55,30 +56,6 @@ endef
 define Build/Compile
 	$(SED) 's,OPENWRT_BASE_BUILD_PATH,$(HOST_BUILD_DIR),g' $(PKG_BUILD_DIR)/base/unix-aux.mak
 	$(SED) 's,OPENWRT_PGK_BUILD_PATH,$(PKG_BUILD_DIR),g' $(PKG_BUILD_DIR)/base/unix-aux.mak
-
-	$(SED) \
-		's|^DEVICE_DEVS1=.*|DEVICE_DEVS1=$$(DD)cups.dev|' \
-		-e 's|^DEVICE_DEVS2=.*|DEVICE_DEVS2=|' \
-		-e 's|^DEVICE_DEVS3=.*|DEVICE_DEVS3=|' \
-		-e 's|^DEVICE_DEVS4=.*|DEVICE_DEVS4=|' \
-		-e 's|^DEVICE_DEVS5=.*|DEVICE_DEVS5=|' \
-		-e 's|^DEVICE_DEVS6=.*|DEVICE_DEVS6=|' \
-		-e 's|^DEVICE_DEVS7=.*|DEVICE_DEVS7=|' \
-		-e 's|^DEVICE_DEVS8=.*|DEVICE_DEVS8=|' \
-		-e 's|^DEVICE_DEVS9=.*|DEVICE_DEVS9=|' \
-		-e 's|^DEVICE_DEVS10=.*|DEVICE_DEVS10=|' \
-		-e 's|^DEVICE_DEVS11=.*|DEVICE_DEVS11=|' \
-		-e 's|^DEVICE_DEVS12=.*|DEVICE_DEVS12=|' \
-		-e 's|^DEVICE_DEVS13=.*|DEVICE_DEVS13=|' \
-		-e 's|^DEVICE_DEVS14=.*|DEVICE_DEVS14=|' \
-		-e 's|^DEVICE_DEVS15=.*|DEVICE_DEVS15=|' \
-		-e 's|^DEVICE_DEVS16=.*|DEVICE_DEVS16=|' \
-		-e 's|^DEVICE_DEVS17=.*|DEVICE_DEVS17=|' \
-		-e 's|^DEVICE_DEVS18=.*|DEVICE_DEVS18=|' \
-		-e 's|^DEVICE_DEVS19=.*|DEVICE_DEVS19=|' \
-		-e 's|^DEVICE_DEVS20=.*|DEVICE_DEVS20=|' \
-		-e 's|^DEVICE_DEVS21=.*|DEVICE_DEVS21=|' \
-		$(PKG_BUILD_DIR)/Makefile
 
 	$(call Build/Compile/Default, cross_prepare)
 	$(call Build/Compile/Default)

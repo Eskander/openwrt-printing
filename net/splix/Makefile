@@ -1,14 +1,13 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=splix
-PKG_VERSION:=2.0.1.20130902svn
+PKG_VERSION:=2.0.2
 PKG_RELEASE:=1
 
-PKG_BUILD_DIR:=$(BUILD_DIR)/splix
-PKG_SOURCE:=splix-$(PKG_VERSION).tar.bz2
-PKG_SOURCE_URL:=https://pkgs.fedoraproject.org/repo/pkgs/splix/splix-2.0.1.20130902svn.tar.bz2/2901e9482dd1a7c44f7b730696868e09
-PKG_MD5SUM:=2901e9482dd1a7c44f7b730696868e09
-PKG_CAT:=bzcat
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.xz
+PKG_SOURCE_URL:=https://github.com/OpenPrinting/splix/releases/download/$(PKG_VERSION)
+PKG_HASH:=skip
+
 PKG_INSTALL:=1
 
 include $(INCLUDE_DIR)/package.mk

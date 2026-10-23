@@ -12,8 +12,8 @@ PKG_VERSION:=10.08.0
 PKG_VERSION_LIBDIR:=10.08.0
 PKG_RELEASE:=1
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
-PKG_SOURCE_URL:=https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs10080/$(PKG-SOURCE)
-PKG_MD5SUM:=da9c4f968e88b16360f90952b17ab7f8
+PKG_SOURCE_URL:=https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/download/gs10080
+PKG_HASH:=skip
 
 PKG_BUILD_DEPENDS:=ghostscript/host
 PKG_INSTALL:=1

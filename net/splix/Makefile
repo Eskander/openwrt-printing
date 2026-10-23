@@ -45,9 +45,13 @@ define Build/Configure
 		$(PKG_BUILD_DIR)/module.mk
 endef
 
+define Build/Install
+endef
+
 define Package/splix/install
 	$(INSTALL_DIR) $(1)/usr/lib/cups/filter
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/rastertoqpdl $(1)/usr/lib/cups/filter/
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/optimized/rastertoqpdl \
+		$(1)/usr/lib/cups/filter/rastertoqpdl
 endef
 
 $(eval $(call BuildPackage,splix))

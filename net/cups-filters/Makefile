@@ -42,17 +42,13 @@ endef
 
 define Package/cups-filters/install
 	$(INSTALL_DIR) $(1)/usr/lib/cups/filter
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/cups/filter/* $(1)/usr/lib/cups/filter/
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/lib/cups/filter/pdftopdf $(1)/usr/lib/cups/filter/
+	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/lib/cups/filter/gstoraster $(1)/usr/lib/cups/filter/
 
-	if [ -d $(PKG_INSTALL_DIR)/usr/share/cups/mime ]; then \
-		$(INSTALL_DIR) $(1)/usr/share/cups/mime; \
-		$(CP) $(PKG_INSTALL_DIR)/usr/share/cups/mime/* $(1)/usr/share/cups/mime/; \
-	fi
-
-	if [ -d $(PKG_INSTALL_DIR)/usr/share/ppd/cupsfilters ]; then \
-		$(INSTALL_DIR) $(1)/usr/share/ppd/cupsfilters; \
-		$(CP) $(PKG_INSTALL_DIR)/usr/share/ppd/cupsfilters/* $(1)/usr/share/ppd/cupsfilters/; \
-	fi
+	$(INSTALL_DIR) $(1)/usr/share/cups/mime
+	$(INSTALL_DATA) $(PKG_INSTALL_DIR)/usr/share/cups/mime/cupsfilters.types $(1)/usr/share/cups/mime/
+	$(INSTALL_DATA) $(PKG_INSTALL_DIR)/usr/share/cups/mime/cupsfilters-individual.convs $(1)/usr/share/cups/mime/
+	$(INSTALL_DATA) $(PKG_INSTALL_DIR)/usr/share/cups/mime/cupsfilters-ghostscript.convs $(1)/usr/share/cups/mime/
 endef
 
 $(eval $(call BuildPackage,cups-filters))

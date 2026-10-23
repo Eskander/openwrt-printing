@@ -19,6 +19,7 @@ include $(INCLUDE_DIR)/autotools.mk
 
 CONFIGURE_ARGS += \
 	--disable-static \
+	--disable-rpath \
 	--with-cups-rundir=/var/run/cups
 
 define Package/libppd

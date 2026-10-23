@@ -16,7 +16,7 @@ define Package/splix
 	SECTION:=net
 	CATEGORY:=Network
 	TITLE:=SPL printer driver for Unix
-	DEPENDS:=+libcups +libcupsimage +libtiff +libpng +libjbigkit
+	DEPENDS:=+libcups +libcupsimage +libtiff +libpng +libjbigkit +libstdcpp
 	URL:=https://openprinting.github.io/splix/
 endef
 

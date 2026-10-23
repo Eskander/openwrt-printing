@@ -23,7 +23,7 @@ CONFIGURE_ARGS += \
 	--disable-imagefilters \
 	--disable-mutool \
 	--disable-foomatic \
-	--disable-poppler \
+	--enable-poppler \
 	--disable-driverless \
 	--enable-individual-cups-filters
 

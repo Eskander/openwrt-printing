@@ -20,8 +20,12 @@ include $(INCLUDE_DIR)/autotools.mk
 CONFIGURE_ARGS += \
 	--disable-static \
 	--disable-rpath \
+	--disable-imagefilters \
+	--disable-mutool \
+	--disable-foomatic \
 	--disable-poppler \
-	--disable-mutool
+	--disable-driverless \
+	--enable-individual-cups-filters
 
 define Package/cups-filters
   SECTION:=net

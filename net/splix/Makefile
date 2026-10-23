@@ -27,13 +27,22 @@ endef
 define Build/Configure
 	$(SED) 's/^CC[[:space:]]*:=.*/CC := $(TARGET_CC)/' $(PKG_BUILD_DIR)/Makefile
 	$(SED) 's/^CXX[[:space:]]*:=.*/CXX := $(TARGET_CXX)/' $(PKG_BUILD_DIR)/Makefile
-	$(SED) 's/^AR[[:space:]]*:=.*/AR := $(TARGET_AR)/' $(PKG_BUILD_DIR)/Makefile
+	$(SED) 's/^AR[[:space:]]*:=.*/AR := $(TARGET_AR) crs/' $(PKG_BUILD_DIR)/Makefile
 
-	$(SED) 's|^CXXFLAGS[[:space:]]*+=.*pkg-config.*|CXXFLAGS += -Iinclude $(TARGET_CPPFLAGS) $(TARGET_CXXFLAGS)|' $(PKG_BUILD_DIR)/module.mk
-	$(SED) 's|^rastertoqpdl_LDFLAGS[[:space:]]*:=.*|rastertoqpdl_LDFLAGS := $(TARGET_LDFLAGS)|' $(PKG_BUILD_DIR)/module.mk
-	$(SED) 's|^rastertoqpdl_LIBS[[:space:]]*:=.*|rastertoqpdl_LIBS := -lpng -ltiff -lcups -lcupsimage -ljbig85 -lpthread|' $(PKG_BUILD_DIR)/module.mk
+	$(SED) 's|^TARGETS[[:space:]]*:=.*|TARGETS := rastertoqpdl|' \
+		$(PKG_BUILD_DIR)/module.mk
 
-	$(SED) 's|^CUPSFILTER[[:space:]]*:=.*|CUPSFILTER := /usr/lib/cups/filter|' $(PKG_BUILD_DIR)/module.mk
+	$(SED) 's|^CXXFLAGS[[:space:]]*+=.*pkg-config.*|CXXFLAGS += -Iinclude -Wall $(TARGET_CPPFLAGS) $(TARGET_CXXFLAGS)|' \
+		$(PKG_BUILD_DIR)/module.mk
+
+	$(SED) 's|^rastertoqpdl_LDFLAGS[[:space:]]*:=.*|rastertoqpdl_LDFLAGS := $(TARGET_LDFLAGS)|' \
+		$(PKG_BUILD_DIR)/module.mk
+
+	$(SED) 's|^rastertoqpdl_LIBS[[:space:]]*:=.*|rastertoqpdl_LIBS := -lcupsimage -lcups -ltiff -lpng -ljbig85 -lpthread|' \
+		$(PKG_BUILD_DIR)/module.mk
+
+	$(SED) 's|^CUPSFILTER[[:space:]]*:=.*|CUPSFILTER := /usr/lib/cups/filter|' \
+		$(PKG_BUILD_DIR)/module.mk
 endef
 
 define Package/splix/install

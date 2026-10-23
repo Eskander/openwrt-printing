@@ -69,9 +69,6 @@ define Build/Compile
 		-e 's|^DEVICE_DEVS16=.*|DEVICE_DEVS16=|' \
 		$(PKG_BUILD_DIR)/Makefile
 
-	$(SED) 's|^FEATURE_DEVS=|FEATURE_DEVS=$(GLD)sarc4.dev |' \
-		$(PKG_BUILD_DIR)/Makefile
-
 	$(call Build/Compile/Default, cross_prepare)
 	$(call Build/Compile/Default)
 endef

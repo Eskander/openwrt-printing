@@ -1,0 +1,8 @@
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -363,1 +363,0 @@
+-BUILT_SOURCES = cupsfilters/test_files/test_text_lorem.txt
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -1249,1 +1249,0 @@
+-BUILT_SOURCES = cupsfilters/test_files/test_text_lorem.txt

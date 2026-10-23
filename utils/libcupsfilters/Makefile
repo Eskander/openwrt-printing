@@ -20,7 +20,9 @@ include $(INCLUDE_DIR)/autotools.mk
 
 CONFIGURE_ARGS += \
 	--disable-static \
-	--disable-poppler \
+	--disable-rpath \
+	--enable-poppler \
+	--disable-ghostscript \
 	--disable-dbus \
 	--disable-exif \
 	--disable-mutool \
@@ -37,7 +39,7 @@ define Package/libcupsfilters
   CATEGORY:=Libraries
   TITLE:=OpenPrinting CUPS filters library
   URL:=https://github.com/OpenPrinting/libcupsfilters
-  DEPENDS:=+libcups +qpdf +lcms2
+  DEPENDS:=+libcups +qpdf +lcms2 +poppler
 endef
 
 define Package/libcupsfilters/description

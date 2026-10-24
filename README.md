@@ -1,64 +1,81 @@
-# Printing packages for OpenWrt
+# OpenWrt Printing Packages
 
-This is a [package feed] aiming at providing a complete printing stack
-for OpenWrt.
+Build and host custom OpenWrt printing packages using the official OpenWrt SDK inside a container.
 
-Notably it has:
-- Ghostscript 10.07.0
-- Gutenprint 5.2.9
-- Cups 2.4.16
-- OpenPrinting's cups-filters 1.0.37
-- poppler 0.24.1
-- many other packages to make sure the ones above work...
+## Packages
 
-[package feed]: http://wiki.openwrt.org/doc/devel/feeds
+This feed provides the following packages:
+- CUPS: printing service and command-line tools
+- cups-filters: document conversion and print filtering
+- SpliX: printer driver for supported Samsung SPL (Samsung Printer Language) printers
+- Supporting libraries and dependencies required by the printing stack
 
-[timesys.com]: http://repository.timesys.com/buildsources/g/ghostscript/
+The current configuration is intended for printers supported by SpliX. Other printers may require a different driver and additional configuration.
 
-### To use this feed,
+## Requirements
 
-- set up your router to use [external storage] for its root file
-  system, as these packages require more than a 100 MB of space.
+- Podman or Docker
+- An [OpenWrt SDK](https://hub.docker.com/r/openwrt/sdk/tags) compatible with your router firmware
+- This repository added to `feeds.conf.default`
 
-[external storage]: http://wiki.openwrt.org/doc/howto/extroot
+## 1. Start the build container
 
-- set up a [cross-compilation environment]
-[cross-compilation environment]: http://wiki.openwrt.org/doc/devel/crosscompile
+Example using the OpenWrt 23.05.6 SDK for BCM63xx SMP:
 
-- add this line to your `feeds.conf` or `feeds.conf.default`
-
-```
-src-git printing https://github.com/belphegor-belbel/openwrt-printing-packages.git
-```
-
-- to compile everything in this feed you should use the script `setup-buildsystem.sh` or some variation of those commands.
-
-- copy compiled packages to your router (copy the whole directory as you need the files used to index the packages)
-
-```
-scp -r ./bin/$ARCH/packages root@openwrt.lan:/storage/printer/packages/
+```sh
+podman run -it --user=0 \
+  --volume=./local:/builder/bin \
+  --publish 8000:8000 \
+  --name=openwrt \
+  docker.io/openwrt/sdk:bcm63xx-smp-23.05.6 bash
 ```
 
-- add local package source to the opkg configuration `/etc/opkg.conf` with
+The host directory `./local` is mounted at `/builder/bin` inside the container.
 
+## 2. Add the printing feed
+
+Inside the container, add this repository to `feeds.conf.default`:
+
+```sh
+echo "src-git printing https://github.com/eskander/openwrt-printing.git" >> feeds.conf.default
+./scripts/feeds update printing
 ```
-src/gz printing file:/storage/printer/packages
+
+## 3. Build the packages
+
+Run the setup script inside the container:
+
+```sh
+./feeds/printing/setup-buildsystem.sh
 ```
 
-- see `opkg-install-printing-packages.sh` to see a suggestion of what to install.
+This prepares the build configuration and builds the printing packages.
 
-- tested against *Attitude Adjustment* (because that is what I have installed...).
+## 4. Serve the package repository
 
-- Avahi is notified of printers added to Cups, and these will appear as *Air Printer*'s in iOS devices.
+Start the repository server:
 
-### Issues / Missing / TODO
+```sh
+./feeds/printing/serve-repo.sh
+```
 
-Caveat: Ghostscript lacks proper cross-compilation support. I used a
-patch taken from [timesys.com]. If your architecture is not there,
-compiling it just won't work for you.
+The script generates the package index and starts an HTTP repository on port `8000`.
 
-The alternative for those who can't compile Ghostscript is to use a
-different PDF backend, in this case Poppler. For instructions of how
-to do this open the tar-ball of the `cups-filters-*.tar.bz2` and check
-the section *1. Selection of the renderer: Ghostscript, Poppler, or
-Adobe Reader* of the `README`.
+It prints the feed configuration line to add to `/etc/opkg/customfeeds.conf` on your router. Replace `BUILD_HOST_IP` with the LAN IP address of the host running Podman/Docker.
+
+## 5. Install on the router
+
+On the router, update the package lists and install the printing stack:
+
+```sh
+opkg update
+opkg install cups cups-filters splix
+```
+
+Keep the official OpenWrt feeds enabled so dependencies can be obtained from them when available.
+
+## Notes
+
+- Use an [SDK](https://hub.docker.com/r/openwrt/sdk/tags) compatible with your router's OpenWrt version and architecture.
+- Rebuild the package index by restarting `serve-repo.sh` after changing packages.
+- Avoid replacing core system libraries with versions built for a different system.

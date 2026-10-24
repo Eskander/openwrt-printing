@@ -20,9 +20,14 @@ if [ ! -f "$SECRET" ] || [ ! -f "$PUBLIC" ]; then
     chmod 600 "$SECRET"
 fi
 
-# Generate and sign the package index.
+# Generate the package index.
 export MKHASH="/builder/staging_dir/host/bin/mkhash"
 /builder/scripts/ipkg-make-index.sh "$FEED" > "$FEED/Packages"
+
+# Make package paths relative to the repository root.
+sed -i 's|Filename: /builder/bin/|Filename: |' "$FEED/Packages"
+
+# Sign the index with our private key.
 "$USIGN" -S -m "$FEED/Packages" -s "$SECRET" -x "$FEED/Packages.sig"
 
 # Get the public key fingerprint and contents.
@@ -34,7 +39,7 @@ PUB_DATA=$(sed -n '2p' "$PUBLIC")
 echo ""
 echo " ===> Add this command on your router to trust this feed's signing key:"
 echo ""
-echo "mkdir -p /etc/opkg/keys && echo '$PUB_HEADER' > /etc/opkg/keys/$FINGERPRINT && echo '$PUB_DATA' >> /etc/opkg/keys/$FINGERPRINT"
+echo "echo '$PUB_HEADER' > /etc/opkg/keys/$FINGERPRINT && echo '$PUB_DATA' >> /etc/opkg/keys/$FINGERPRINT"
 echo ""
 echo ""
 echo " ===> Add this feed to /etc/opkg/customfeeds.conf on your router:"

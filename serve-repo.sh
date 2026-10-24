@@ -24,8 +24,8 @@ fi
 export MKHASH="/builder/staging_dir/host/bin/mkhash"
 /builder/scripts/ipkg-make-index.sh "$FEED" > "$FEED/Packages"
 
-# Make package paths relative to the repository root.
-sed -i 's|Filename: /builder/bin/|Filename: |' "$FEED/Packages"
+# Remove the feed path from package filenames.
+sed -i "s|Filename: /builder/bin/packages/[^/]*/printing/|Filename: |" "$FEED/Packages"
 
 # Sign the index with our private key.
 "$USIGN" -S -m "$FEED/Packages" -s "$SECRET" -x "$FEED/Packages.sig"
